@@ -2,9 +2,7 @@ import React from 'react';
 
 const Sidebar = () => {
   return (
-    <div className='flex bg-lime-700'>
-      SideBar
-    </div>
+    <nav className='w-72 bg-red-400'>Sidebar</nav>
   );
 };
 
