@@ -1,77 +1,150 @@
 import React, { useEffect, useState } from 'react';
 
+const vehiculosBackend = [
+  {
+    nombre: 'Corolla',
+    marca: 'Toyota',
+    modelo: 2014,
+  },
+  {
+    nombre: 'Sandero',
+    marca: 'Renault',
+    modelo: 2020,
+  },
+  {
+    nombre: 'Rav4',
+    marca: 'Toyota',
+    modelo: 2021,
+  },
+  {
+    nombre: 'Fiesta',
+    marca: 'Ford',
+    modelo: 2017,
+  },
+  {
+    nombre: 'Mazda 3',
+    marca: 'Mazda',
+    modelo: 2020,
+  },
+  {
+    nombre: 'Chevrolet',
+    marca: 'Onix',
+    modelo: 2020,
+  },
+  {
+    nombre: 'Chevrolet',
+    marca: 'Onix',
+    modelo: 2020,
+  },
+];
+
+
+
+
 const Vehiculos = () => {
-
-  const [nombreVehiculo, setNombreVehiculo] = useState('');
-
-
-  // const [nombreVehiculo, setNombreVehiculo] = useState('Este es el valor inicial');
-
-  /* De esta manera puedo meter valores iniciales en el input (junto con el value que esta más abajo - Línea 60ypico) */
-  /* Pero si no quiero un valor inicial meto el codigo de la linea 5 y ya (y sin el value) */
-
-
-
-
-
+  const [mostrarTabla, setMostrarTabla] = useState(true);
+  const [vehiculos, setVehiculos] = useState([])
+  const [textoBoton, setTextoBoton] = useState("Crear neuvo vehículo")
 
   useEffect(() => {
-    console.log('Hola, soy un use effect que se ejecuta una vez por primera vez carga')
+    setVehiculos(vehiculosBackend)
+
   }, []);
 
-  /* Esto se va a ejecutar cuando las variables dentro de las llaves (array de dependencias) cambien  */
-  /*cuando las llaves están vacias se ejecuta solo la primera vez. Es útil por ejemplo apra traer bases de datos por primer vez se carga la página*/
+  /* Este useEffect hace que se le asigne a esa variable el 
+  setVehiculos el objeto cada vez que recarga pro 1ra vez */
+  
 
   useEffect(() => {
-    console.log('Este es un use effect cada vez que cambia  el valor de nombreVehiculo')
-    console.log('El valor de la variable es, ', nombreVehiculo)
-  }, [nombreVehiculo]);
+    if (mostrarTabla) {
+      setTextoBoton("Crear nuevo vehiculo")
+    } else {
+      setTextoBoton("Mostrar tabla de vehiculos")
 
-  /* Etse useEffect se ejecuta cada vez que la variable nombreVehiculo cambia. Está cambiando gracias al onChange con setNombredeVehiuclo */
-  /* Los recomensable es usar la variable nombreVehiculo para el useEffect, y el setNombreVehiculo para el onchange  */
+    }
+  }, [mostrarTabla]);
 
 
-  /*   const cambioDeNombre = (e) => {
-      console.log('Nombre: ', e.target.value);
-    }; */
-  /*para poder recibir lo que sale de un input se utiliza el onChange, y a ese OnChange se le mete una función, y con esa función se hace algo*/
-  /*En cambioDeNombre se recibe ele evento. Normalmente se le pone e */
 
-  const cambioDeMarca = (e) => {
-    console.log('Marca: ', e.target.value);
-  };
 
-  const enviarDatosAlBackend =() =>{
-    console.log('El valor de la variable es: ', nombreVehiculo)
-  }
 
-  /*PEEEEEERo. Habitualmente uno mete las arrow function dentro de los inputs Pille: (Hace exactemente lo mismo*/
-
+  /* En el onClick de mostrar tablaesa vaina de poner el getter y el setter es para hacer una vaina que se llama toggle
+  Esto es lo que hace que al dar click en un botón se pueda mostrar o no algo en fubncion de una variable de estado boleano
+  si */
   return (
-    <div>
-      <form className='flex flex-col'>
-        <h2>formulario de creación de vehículos</h2>
+    <div className='flex h-full w-full flex-col items-center justify-start'>
+      <div className='flex flex-col items-center justify-center mt-0'>
+        <h2 className='text-2xl font-extrabold text-gray-900 mb-3 mt-0'>
+          Página de admin de vehiculos
+          </h2>
 
-        {/* <input onChange={(e) => {
-          console.log('Nombre: ', e.target.value);
-        }} type='text' placeholder='Nombre del vechículo' /> */}
+        <button className='bg-gray-400 rounded-full p-2 transform transition duration-500 text-amber-900 hover:scale-110 hover:text-yellow-50' 
+        type='button' 
+        onClick={() => { setMostrarTabla(!mostrarTabla) }}>{textoBoton}</button>
+        {mostrarTabla ?
+          <TablaDeVehiculos listaVehiculos ={vehiculos} /> :
+          <FormularioCreacionDeVehiculos />
+        }
 
-        {/*Yo no quiero que se imprima en consola, quiero que se agregue a la variable steNombredeVehiculo
-        entonces pille */}
+      </div>
 
-        <input onChange={(e) => {
-          setNombreVehiculo(e.target.value);
-        }} 
-        // value={nombreVehiculo} 
-        type='text' placeholder='Nombre del vechículo' />
+    </div>
 
-        <input onChange={cambioDeMarca} type='text' placeholder='Marca del vehículo' />
-        <input type='text' placeholder='Nombre del vehículo' />
-        <button type='button' onClick={enviarDatosAlBackend} className='bg-blue-400 text-gray-700 '>Enviar datos</button>
-        {/*Al aprecer hay que poner el type ='button' antes para que funcione el onClick*/}
+  )
+
+};
+
+const FormularioCreacionDeVehiculos = () => {
+  return (
+    <div className='flex flex-col items-center justify-center'>
+      <h2 className='text-2xl font-extrabold text-gray-900 mb-3 mt-0'>Agregar nuevo vehiculo</h2>
+      <form className='grid grid-cols-3'>
+        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
+        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
+        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
+        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
+        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
+        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
+        <button className='col-span-3 bg-green-200 rounded-full shadow-md hover:bg-green-800 hover:text-orange-50' type='submit'>Guardar vehiculo</button>
       </form>
     </div>
   )
 };
 
-export default Vehiculos;
+const TablaDeVehiculos = ({listaVehiculos}) => {
+  useEffect(() => {
+
+    console.log("este es el listado de vehiculos en el componente tabla", listaVehiculos)
+  }, [listaVehiculos]);
+  
+
+
+  return (
+    <div className='flex flex-col items-center justify-center'>
+      <h2 className='text-2xl font-extrabold text-gray-900 mb-3 mt-0'>Tabla de los vehiculos</h2>
+      <table className='flex flex-col p-3 text-center'>
+        <thead className='p-3'>
+          <tr>
+            <th>Nombre</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+          </tr>
+        </thead>
+        <tbody className='p-3'>
+          {listaVehiculos.map((listaVehiculos) =>{
+            return(
+          <tr>
+            <td>{listaVehiculos.nombre}</td>
+            <td>{listaVehiculos.marca}</td>
+            <td>{listaVehiculos.modelo}</td>
+          </tr>
+
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+};
+
+export default Vehiculos; 
