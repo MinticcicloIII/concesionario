@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const vehiculosBackend = [
   {
@@ -43,8 +45,9 @@ const vehiculosBackend = [
 
 const Vehiculos = () => {
   const [mostrarTabla, setMostrarTabla] = useState(true);
-  const [vehiculos, setVehiculos] = useState([])
-  const [textoBoton, setTextoBoton] = useState("Crear neuvo vehículo")
+  const [vehiculos, setVehiculos] = useState([]);
+  const [textoBoton, setTextoBoton] = useState("Crear  vehículo");
+  const [colorBoton, setColorBoton] = useState('red');
 
   useEffect(() => {
     setVehiculos(vehiculosBackend)
@@ -53,13 +56,15 @@ const Vehiculos = () => {
 
   /* Este useEffect hace que se le asigne a esa variable el 
   setVehiculos el objeto cada vez que recarga pro 1ra vez */
-  
+
 
   useEffect(() => {
     if (mostrarTabla) {
-      setTextoBoton("Crear nuevo vehiculo")
+      setTextoBoton("Crear nuevo vehiculo");
+      setColorBoton('bg-gray-200');
     } else {
-      setTextoBoton("Mostrar tabla de vehiculos")
+      setTextoBoton("Mostrar tabla de vehiculos");
+      setColorBoton('bg-gray-700');
 
     }
   }, [mostrarTabla]);
@@ -76,15 +81,33 @@ const Vehiculos = () => {
       <div className='flex flex-col items-center justify-center mt-0'>
         <h2 className='text-2xl font-extrabold text-gray-900 mb-3 mt-0'>
           Página de admin de vehiculos
-          </h2>
+        </h2>
 
-        <button className='bg-gray-400 rounded-full p-2 transform transition duration-500 text-amber-900 hover:scale-110 hover:text-yellow-50' 
-        type='button' 
-        onClick={() => { setMostrarTabla(!mostrarTabla) }}>{textoBoton}</button>
-        {mostrarTabla ?
-          <TablaDeVehiculos listaVehiculos ={vehiculos} /> :
-          <FormularioCreacionDeVehiculos />
-        }
+        <button
+          onClick={() => {
+            setMostrarTabla(!mostrarTabla);
+          }}
+          className={`rounded-full ${colorBoton} bg-gray-700 p-2 text-amber-900 hover:scale-110 hover:text-yellow-50 `}
+          type='button'
+        >
+          {textoBoton}
+
+        </button>
+
+
+
+
+        {mostrarTabla ? (
+
+          <TablaDeVehiculos listaVehiculos={vehiculos} />
+        ) : (
+
+          <FormularioCreacionDeVehiculos
+            funcionParaMostrarLaTabla={setMostrarTabla}
+            funcionParaAgregarUnVehiculo={setVehiculos}
+            listaVehiculos={vehiculos} />
+        )}
+        <ToastContainer position="bottom-center" autoClose={5000} />
 
       </div>
 
@@ -94,29 +117,71 @@ const Vehiculos = () => {
 
 };
 
-const FormularioCreacionDeVehiculos = () => {
+const FormularioCreacionDeVehiculos = ({ funcionParaMostrarLaTabla, listaVehiculos, funcionParaAgregarUnVehiculo }) => {
+  const [nombre, setNombre] = useState();
+  const [marca, setMarca] = useState();
+  const [modelo, setModelo] = useState();
+
+  const enviarAlbackend = () => {
+    console.log("Enviar al backend")
+    toast.success('Datos guarados')
+    funcionParaMostrarLaTabla(true)
+    funcionParaAgregarUnVehiculo([...listaVehiculos, { nombre: nombre, marca: marca, modelo: modelo },])
+
+    /* ... spread operator me pone todo lo que tiene es variable, y se le pone lo otro es comoe l append de python */
+
+  }
+
   return (
     <div className='flex flex-col items-center justify-center'>
       <h2 className='text-2xl font-extrabold text-gray-900 mb-3 mt-0'>Agregar nuevo vehiculo</h2>
-      <form className='grid grid-cols-3'>
-        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
-        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
-        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
-        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
-        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
-        <input type="text" className='bg-blue-500 border border-gray-800 rounded-xl p-2 m-2' />
-        <button className='col-span-3 bg-green-200 rounded-full shadow-md hover:bg-green-800 hover:text-orange-50' type='submit'>Guardar vehiculo</button>
+      <form className='flex flex-col'>
+        <label className='flex flex-col' htmlFor="nombre">
+          Nombre del vehiculo
+
+          <input required  name='nombre' value={nombre} type="text" className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2' placeholder='Corolla'
+            onChange={(e) => {
+              setNombre(e.target.value);
+            }}
+            />
+        </label>
+        <label className='flex flex-col' htmlFor="marca">
+          Marca del vehiculo
+          <select required className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2'
+            value={marca}
+            onChange={(e) => {
+              setMarca(e.target.value);
+            }}
+          >
+            <option disabled >Seleccione una opción</option>
+            <option >Renault</option>
+            <option >Toyota</option>
+            <option >Ford</option>
+          </select>
+        </label>
+        <label className='flex flex-col' htmlFor="modelo">
+          Nombre del vehiculo
+
+          <input
+            required
+            name='modelo' value={modelo} type="number" max={2022} min={1970} className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2' placeholder='1992'
+            onChange={(e) => {
+              setModelo(e.target.value);
+            }}
+          />
+        </label>
+        <button type='submit' onClick={() => { enviarAlbackend(); }} className='bg-green-200 rounded-full shadow-md hover:bg-green-800 hover:text-orange-50' >Guardar vehiculo</button>
       </form>
     </div>
   )
 };
 
-const TablaDeVehiculos = ({listaVehiculos}) => {
+const TablaDeVehiculos = ({ listaVehiculos }) => {
   useEffect(() => {
 
     console.log("este es el listado de vehiculos en el componente tabla", listaVehiculos)
   }, [listaVehiculos]);
-  
+
 
 
   return (
@@ -131,13 +196,13 @@ const TablaDeVehiculos = ({listaVehiculos}) => {
           </tr>
         </thead>
         <tbody className='p-3'>
-          {listaVehiculos.map((listaVehiculos) =>{
-            return(
-          <tr>
-            <td>{listaVehiculos.nombre}</td>
-            <td>{listaVehiculos.marca}</td>
-            <td>{listaVehiculos.modelo}</td>
-          </tr>
+          {listaVehiculos.map((listaVehiculos) => {
+            return (
+              <tr>
+                <td>{listaVehiculos.nombre}</td>
+                <td>{listaVehiculos.marca}</td>
+                <td>{listaVehiculos.modelo}</td>
+              </tr>
 
             )
           })}
