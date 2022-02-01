@@ -9,7 +9,7 @@ const PublicLayout = () => {
   return (
     <div className='flex flex-col justify-between h-screen'>
       <NavBar/>
-      <main className='h-full overflow-y-scroll bg-lime-200'>
+      <main className='h-full overflow-y-scroll'>
         <Outlet/>
       </main>
       <Footer/>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -103,8 +103,8 @@ const Vehiculos = () => {
         ) : (
 
           <FormularioCreacionDeVehiculos
-            funcionParaMostrarLaTabla={setMostrarTabla}
-            funcionParaAgregarUnVehiculo={setVehiculos}
+            setMostrarTabla={setMostrarTabla}
+            setVehiculos={setVehiculos}
             listaVehiculos={vehiculos} />
         )}
         <ToastContainer position="bottom-center" autoClose={5000} />
@@ -117,43 +117,50 @@ const Vehiculos = () => {
 
 };
 
-const FormularioCreacionDeVehiculos = ({ funcionParaMostrarLaTabla, listaVehiculos, funcionParaAgregarUnVehiculo }) => {
-  const [nombre, setNombre] = useState();
-  const [marca, setMarca] = useState();
-  const [modelo, setModelo] = useState();
+const FormularioCreacionDeVehiculos = ({ setMostrarTabla, setVehiculos, listaVehiculos }) => {
+  const form = useRef(null);
 
-  const enviarAlbackend = () => {
-    console.log("Enviar al backend")
-    toast.success('Datos guarados')
-    funcionParaMostrarLaTabla(true)
-    funcionParaAgregarUnVehiculo([...listaVehiculos, { nombre: nombre, marca: marca, modelo: modelo },])
+  const submitForm = (e) => {
+    e.preventDefault();
+    const fd = new FormData(form.current)
+    const nuevoVehiculo ={};
 
-    /* ... spread operator me pone todo lo que tiene es variable, y se le pone lo otro es comoe l append de python */
+    fd.forEach((value, key) => {
+      nuevoVehiculo[key] = value;
+    })
+    setMostrarTabla(true)
+    setVehiculos([...listaVehiculos,nuevoVehiculo]);
+    toast.success("Vehículo agregado correctamente");
 
-  }
 
+  };
+
+  /* Use siempre esto para formualrios porque no importa cuánto tenga en el formulario este man la coge, no hay ponerse a ponerse 
+  a usar estadosni onChange ni onSubmit */
   return (
+
     <div className='flex flex-col items-center justify-center'>
       <h2 className='text-2xl font-extrabold text-gray-900 mb-3 mt-0'>Agregar nuevo vehiculo</h2>
-      <form className='flex flex-col'>
+      <form ref={form} onSubmit={submitForm} className='flex flex-col'>
         <label className='flex flex-col' htmlFor="nombre">
           Nombre del vehiculo
-
-          <input required  name='nombre' value={nombre} type="text" className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2' placeholder='Corolla'
-            onChange={(e) => {
-              setNombre(e.target.value);
-            }}
-            />
+          <input
+            name='nombre'
+            type="text"
+            className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2'
+            placeholder='Corolla'
+            required
+          />
         </label>
         <label className='flex flex-col' htmlFor="marca">
           Marca del vehiculo
-          <select required className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2'
-            value={marca}
-            onChange={(e) => {
-              setMarca(e.target.value);
-            }}
+          <select
+            name='marca'
+            className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2'
+            required
+            defaultValue={0}
           >
-            <option disabled >Seleccione una opción</option>
+            <option disabled value={0} >Seleccione una opción</option>
             <option >Renault</option>
             <option >Toyota</option>
             <option >Ford</option>
@@ -163,14 +170,21 @@ const FormularioCreacionDeVehiculos = ({ funcionParaMostrarLaTabla, listaVehicul
           Nombre del vehiculo
 
           <input
+            name='modelo'
+            type="number"
+            max={2022}
+            min={1970}
+            className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2'
+            placeholder='1992'
             required
-            name='modelo' value={modelo} type="number" max={2022} min={1970} className='bg-gray-200 border border-gray-800 rounded-xl p-2 m-2' placeholder='1992'
-            onChange={(e) => {
-              setModelo(e.target.value);
-            }}
           />
         </label>
-        <button type='submit' onClick={() => { enviarAlbackend(); }} className='bg-green-200 rounded-full shadow-md hover:bg-green-800 hover:text-orange-50' >Guardar vehiculo</button>
+        <button
+          type='submit'
+          className='bg-green-200 rounded-full shadow-md hover:bg-green-800 hover:text-orange-50' >
+          Guardar vehiculo
+        </button>
+
       </form>
     </div>
   )
@@ -199,9 +213,9 @@ const TablaDeVehiculos = ({ listaVehiculos }) => {
           {listaVehiculos.map((listaVehiculos) => {
             return (
               <tr>
-                <td>{listaVehiculos.nombre}</td>
-                <td>{listaVehiculos.marca}</td>
-                <td>{listaVehiculos.modelo}</td>
+                <td>{listaVehiculos.nombre}</td>;
+                <td>{listaVehiculos.marca}</td>;
+                <td>{listaVehiculos.modelo}</td>;
               </tr>
 
             )
