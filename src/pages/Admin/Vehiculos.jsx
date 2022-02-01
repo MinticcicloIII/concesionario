@@ -47,7 +47,8 @@ const Vehiculos = () => {
   const [mostrarTabla, setMostrarTabla] = useState(true);
   const [vehiculos, setVehiculos] = useState([]);
   const [textoBoton, setTextoBoton] = useState("Crear  vehículo");
-  const [colorBoton, setColorBoton] = useState('red');
+  const [colorBoton, setColorBoton] = useState('');
+  const [colorTexto, setColorTexto] = useState('');
 
   useEffect(() => {
     setVehiculos(vehiculosBackend)
@@ -62,9 +63,11 @@ const Vehiculos = () => {
     if (mostrarTabla) {
       setTextoBoton("Crear nuevo vehiculo");
       setColorBoton('bg-gray-200');
+      setColorTexto('text-blue-900')
     } else {
       setTextoBoton("Mostrar tabla de vehiculos");
       setColorBoton('bg-gray-700');
+      setColorTexto('text-blue-50')
 
     }
   }, [mostrarTabla]);
@@ -87,7 +90,7 @@ const Vehiculos = () => {
           onClick={() => {
             setMostrarTabla(!mostrarTabla);
           }}
-          className={`rounded-full ${colorBoton} bg-gray-700 p-2 text-amber-900 hover:scale-110 hover:text-yellow-50 `}
+          className={`${colorBoton} ${colorTexto} rounded-full p-2 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 `}
           type='button'
         >
           {textoBoton}
