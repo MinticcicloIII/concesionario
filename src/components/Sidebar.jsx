@@ -1,26 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ImagenLogo from './ImagenLogo';
-import 'styles/responsive.css'
 /*Uno debe garantizar que la menos se vea en 300px */
 const Sidebar = () => {
   return (
-    <nav className='w-72 bg-red-400 h-full flex flex-col border border-gray-500 p-4 sidebar'>
+      <nav className='hidden md:flex md:w-72 bg-red-400 h-full flex flex-col border border-gray-500 p-4 sidebar'>
 
-      <Link to='admin' >
-        <ImagenLogo />
-      </Link>
-      <div className='my-4'>
+        <Link to='admin' >
+          <ImagenLogo />
+        </Link>
+        <div className='my-4'>
 
-        <Ruta icono='fas fa-user' ruta='admin/profile' nombre='Perfil' />
-        <Ruta icono='fas fa-car' ruta='admin/vehiculos' nombre='Vehículos' />
-        <Ruta icono='fas fa-cash-register' ruta='admin/ventas' nombre='Ventas' />
-        <Ruta icono='fas fa-users' ruta='admin/usuarios' nombre='Usuarios' />
+          <Ruta icono='fas fa-user' ruta='admin/profile' nombre='Perfil' />
+          <Ruta icono='fas fa-car' ruta='admin/vehiculos' nombre='Vehículos' />
+          <Ruta icono='fas fa-cash-register' ruta='admin/ventas' nombre='Ventas' />
+          <Ruta icono='fas fa-users' ruta='admin/usuarios' nombre='Usuarios' />
 
-      </div>
-      <button>Cerrar sesión</button>
+        </div>
+        <button>Cerrar sesión</button>
 
-    </nav >
+      </nav >
   );
 };
 const Ruta = ({ icono, ruta, nombre }) => {
