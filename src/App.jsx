@@ -14,7 +14,6 @@ import {
   Route
 } from "react-router-dom";
 import './styles/App.css';
-import VehPrueba from "pages/Admin/VehPrueba";
 import { DarkModeContext} from 'context/DarkMode'
 
 function App() {
@@ -34,7 +33,6 @@ useEffect(() => {
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/vehiculos" element={<Vehiculos />} />
               <Route path="/admin/clientes" element={<Clientes />} />
-              <Route path="/admin/vehprueba" element={<VehPrueba />} />
             </Route>
             <Route path="/" element={<AuthLayout />} >
               <Route path="/registro" element={<Registro />} />
